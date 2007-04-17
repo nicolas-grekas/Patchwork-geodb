@@ -1,3 +1,1 @@
-<?php
-
-#import __CIA__
+<?php #import ../QSelect
