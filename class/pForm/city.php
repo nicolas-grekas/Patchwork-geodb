@@ -12,7 +12,7 @@
  ***************************************************************************/
 
 
-class extends iaForm_QSelect
+class extends pForm_QSelect
 {
 	protected $src = 'QSelect/city';
 
