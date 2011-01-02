@@ -12,7 +12,7 @@
  ***************************************************************************/
 
 
-class extends agent
+class agent_live_city extends agent
 {
 	public $get = 'q';
 

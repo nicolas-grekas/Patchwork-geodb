@@ -12,7 +12,7 @@
  ***************************************************************************/
 
 
-class extends agent_QSelect
+class agent_QSelect_city extends agent_QSelect
 {
 	protected
 
