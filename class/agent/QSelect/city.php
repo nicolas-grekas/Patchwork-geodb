@@ -1,6 +1,6 @@
-<?php /*********************************************************************
+<?php /***** vi: set encoding=utf-8 expandtab shiftwidth=4: ****************
  *
- *   Copyright : (C) 2007 Nicolas Grekas. All rights reserved.
+ *   Copyright : (C) 2011 Nicolas Grekas. All rights reserved.
  *   Email     : p@tchwork.org
  *   License   : http://www.gnu.org/licenses/agpl.txt GNU/AGPL
  *
@@ -14,20 +14,20 @@
 
 class agent_QSelect_city extends agent_QSelect
 {
-	protected
+    protected
 
-	$maxage = -1,
-	$template = 'QSelect/liveAgent.js';
+    $maxage = -1,
+    $template = 'QSelect/liveAgent.js';
 
 
-	function control() {}
+    function control() {}
 
-	function compose($o)
-	{
-		$o->src = 'live/city';
-		$o->loop = 'cities';
-		$o->key = 'city';
+    function compose($o)
+    {
+        $o->src = 'live/city';
+        $o->loop = 'cities';
+        $o->key = 'city';
 
-		return $o;
-	}
+        return $o;
+    }
 }

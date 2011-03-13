@@ -1,6 +1,6 @@
-<?php /*********************************************************************
+<?php /***** vi: set encoding=utf-8 expandtab shiftwidth=4: ****************
  *
- *   Copyright : (C) 2007 Nicolas Grekas. All rights reserved.
+ *   Copyright : (C) 2011 Nicolas Grekas. All rights reserved.
  *   Email     : p@tchwork.org
  *   License   : http://www.gnu.org/licenses/agpl.txt GNU/AGPL
  *
@@ -14,86 +14,86 @@
 
 class agent_live_city extends agent
 {
-	public $get = 'q';
+    public $get = 'q';
 
-	protected $maxage = -1;
+    protected $maxage = -1;
 
-	function control() {}
+    function control() {}
 
-	function compose($o)
-	{
-		$sql = $this->get->q;
-		$sql = ('*' == $sql ? '' : lingua::getKeywords($sql));
-		$sql = sqlite_escape_string($sql);
+    function compose($o)
+    {
+        $sql = $this->get->q;
+        $sql = ('*' == $sql ? '' : lingua::getKeywords($sql));
+        $sql = sqlite_escape_string($sql);
 
-		switch ($a = substr($sql, 0, 3))
-		{
-		case 'agi':
-		case 'ayi':
-			if ('os ' == substr($sql, 3, 3))
-			{
-				$sql = substr($sql, 5);
-				$sql = "search GLOB 'agios{$sql}*' OR search GLOB 'ayios{$sql}*'";
-				break;
-			}
+        switch ($a = substr($sql, 0, 3))
+        {
+        case 'agi':
+        case 'ayi':
+            if ('os ' == substr($sql, 3, 3))
+            {
+                $sql = substr($sql, 5);
+                $sql = "search GLOB 'agios{$sql}*' OR search GLOB 'ayios{$sql}*'";
+                break;
+            }
 
-		case 'st ': $sql = 'saint ' . substr($sql, 3);
-		default: $sql = '' === $sql ? 1 : "search GLOB '{$sql}*'";
-		}
+        case 'st ': $sql = 'saint ' . substr($sql, 3);
+        default: $sql = '' === $sql ? 1 : "search GLOB '{$sql}*'";
+        }
 
-		$sql = "SELECT city_id, city FROM city WHERE {$sql} ORDER BY OID";
+        $sql = "SELECT city_id, city FROM city WHERE {$sql} ORDER BY OID";
 
-		$a = patchworkPath('data/geodb.sqlite');
-		$a = new SQLiteDatabase($a);
+        $a = patchworkPath('data/geodb.sqlite');
+        $a = new SQLiteDatabase($a);
 
-		$o->cities = new loop_city_($a, $sql, 15);
+        $o->cities = new loop_city_($a, $sql, 15);
 
-		return $o;
-	}
+        return $o;
+    }
 }
 
 class loop_city_ extends loop
 {
-	protected $db;
-	protected $sql;
-	protected $limit;
+    protected $db;
+    protected $sql;
+    protected $limit;
 
-	protected $prevId;
-	protected $count;
-	protected $result;
+    protected $prevId;
+    protected $count;
+    protected $result;
 
-	function __construct($db, $sql, $limit)
-	{
-		$this->db = $db;
-		$this->sql = $sql;
-		$this->limit = $limit + 1;
-	}
+    function __construct($db, $sql, $limit)
+    {
+        $this->db = $db;
+        $this->sql = $sql;
+        $this->limit = $limit + 1;
+    }
 
-	protected function prepare()
-	{
-		$this->prevId = 0;
-		$this->count = $this->limit;
-		$this->result = $this->db->unbufferedQuery($this->sql);
+    protected function prepare()
+    {
+        $this->prevId = 0;
+        $this->count = $this->limit;
+        $this->result = $this->db->unbufferedQuery($this->sql);
 
-		return -1;
-	}
+        return -1;
+    }
 
-	protected function next()
-	{
-		if (--$this->count) do
-		{
-			if ($data = $this->result->fetchObject())
-			{
-				if ($data->city_id != $this->prevId)
-				{
-					$this->prevId = $data->city_id;
-					return (object) array('city' => $data->city);
-				}
-			}
-			else break;
-		}
-		while (1);
+    protected function next()
+    {
+        if (--$this->count) do
+        {
+            if ($data = $this->result->fetchObject())
+            {
+                if ($data->city_id != $this->prevId)
+                {
+                    $this->prevId = $data->city_id;
+                    return (object) array('city' => $data->city);
+                }
+            }
+            else break;
+        }
+        while (1);
 
-		unset($this->result);
-	}
+        unset($this->result);
+    }
 }

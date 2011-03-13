@@ -1,6 +1,6 @@
-<?php /*********************************************************************
+<?php /***** vi: set encoding=utf-8 expandtab shiftwidth=4: ****************
  *
- *   Copyright : (C) 2007 Nicolas Grekas. All rights reserved.
+ *   Copyright : (C) 2011 Nicolas Grekas. All rights reserved.
  *   Email     : p@tchwork.org
  *   License   : http://www.gnu.org/licenses/agpl.txt GNU/AGPL
  *
@@ -14,35 +14,35 @@
 
 class pForm_city extends pForm_QSelect
 {
-	protected $src = 'QSelect/city';
+    protected $src = 'QSelect/city';
 
-	protected function init(&$param)
-	{
-		if (isset($param['default']))
-		{
-			$a = strpos($param['default'], ':');
+    protected function init(&$param)
+    {
+        if (isset($param['default']))
+        {
+            $a = strpos($param['default'], ':');
 
-			if (false !== $a) $param['default'] = substr($param['default'], $a + 1);
-		}
+            if (false !== $a) $param['default'] = substr($param['default'], $a + 1);
+        }
 
-		parent::init($param);
+        parent::init($param);
 
-		if (!$this->value)
-		{
-			$a = strpos($this->value, ':');
+        if (!$this->value)
+        {
+            $a = strpos($this->value, ':');
 
-			if (false !== $a) $this->value = str_replace($this->value, ':', '_');
-		}
-	}
+            if (false !== $a) $this->value = str_replace($this->value, ':', '_');
+        }
+    }
 
-	function getDbValue()
-	{
-		if ($this->value)
-		{
-			$value = geodb::getCityId($this->value) . ':' . $this->value;
-		}
-		else $value = '0:';
+    function getDbValue()
+    {
+        if ($this->value)
+        {
+            $value = geodb::getCityId($this->value) . ':' . $this->value;
+        }
+        else $value = '0:';
 
-		return $value;
-	}
+        return $value;
+    }
 }
