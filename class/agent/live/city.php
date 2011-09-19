@@ -80,7 +80,7 @@ class loop_city_ extends loop
 
     protected function next()
     {
-        if (--$this->count) do
+        if (--$this->count) for (;;)
         {
             if ($data = $this->result->fetchObject())
             {
@@ -92,7 +92,6 @@ class loop_city_ extends loop
             }
             else break;
         }
-        while (1);
 
         unset($this->result);
     }
