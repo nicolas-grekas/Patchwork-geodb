@@ -16,7 +16,7 @@ class geodb
 {
     static $db;
 
-    static function __constructStatic()
+    static function __init()
     {
         self::$db = new SQLiteDatabase(patchworkPath('data/geodb.sqlite'));
     }
