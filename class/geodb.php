@@ -18,17 +18,17 @@ class geodb
 
     static function __init()
     {
-        self::$db = new SQLiteDatabase(patchworkPath('data/geodb.sqlite'));
+        self::$db = new PDO('sqlite:' . patchworkPath('data/geodb.sqlite3'));
     }
 
     static function getCityId($city)
     {
-        $sql = sqlite_escape_string(lingua::getKeywords($city));
+        $sql = self::$db->quote(lingua::getKeywords($city));
         $sql = "SELECT city_id
                 FROM city
-                WHERE search='{$sql}'
+                WHERE search={$sql}
                 LIMIT 1";
-        $sql = self::$db->arrayQuery($sql, SQLITE_NUM);
+        $sql = self::$db->query($sql)->fetchAll(PDO::FETCH_NUM);
         return $sql ? $sql[0][0] : 0;
     }
 
@@ -46,7 +46,7 @@ class geodb
                     ON r.region_id=c.region_id
                 WHERE city_id={$city_id}
                 LIMIT 1";
-        $sql = self::$db->arrayQuery($sql, SQLITE_ASSOC);
+        $sql = self::$db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         return $sql ? $sql[0] : false;
     }

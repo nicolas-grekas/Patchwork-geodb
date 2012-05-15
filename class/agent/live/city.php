@@ -22,9 +22,12 @@ class agent_live_city extends agent
 
     function compose($o)
     {
+        $db = patchworkPath('data/geodb.sqlite3');
+        $db = new PDO("sqlite:{$db}");
+
         $sql = $this->get->q;
         $sql = ('*' == $sql ? '' : lingua::getKeywords($sql));
-        $sql = sqlite_escape_string($sql);
+        $sql = substr($db->quote($sql), 1, -1);
 
         switch ($a = substr($sql, 0, 3))
         {
@@ -43,10 +46,7 @@ class agent_live_city extends agent
 
         $sql = "SELECT city_id, city FROM city WHERE {$sql} ORDER BY OID";
 
-        $a = patchworkPath('data/geodb.sqlite');
-        $a = new SQLiteDatabase($a);
-
-        $o->cities = new loop_city_($a, $sql, 15);
+        $o->cities = new loop_city_($db, $sql, 15);
 
         return $o;
     }
@@ -73,7 +73,7 @@ class loop_city_ extends loop
     {
         $this->prevId = 0;
         $this->count = $this->limit;
-        $this->result = $this->db->unbufferedQuery($this->sql);
+        $this->result = $this->db->query($this->sql);
 
         return -1;
     }
@@ -82,16 +82,18 @@ class loop_city_ extends loop
     {
         if (--$this->count) for (;;)
         {
-            if ($data = $this->result->fetchObject())
+            if ($data = $this->result->fetch(PDO::FETCH_ASSOC))
             {
-                if ($data->city_id != $this->prevId)
+                if ($data['city_id'] != $this->prevId)
                 {
-                    $this->prevId = $data->city_id;
-                    return (object) array('city' => $data->city);
+                    $this->prevId = $data['city_id'];
+                    return (object) array('city' => $data['city']);
                 }
             }
             else break;
         }
+
+        $this->result->closeCursor();
 
         unset($this->result);
     }
