@@ -44,7 +44,7 @@ class agent_live_city extends agent
         default: $sql = '' === $sql ? 1 : "search GLOB '{$sql}*'";
         }
 
-        $sql = "SELECT city_id, city FROM city WHERE {$sql} ORDER BY OID";
+        $sql = "SELECT city_id, city FROM city WHERE {$sql} ORDER BY rowid";
 
         $o->cities = new loop_city_($db, $sql, 15);
 
