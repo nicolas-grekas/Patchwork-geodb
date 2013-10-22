@@ -45,6 +45,12 @@ class geodb
                 LIMIT 1";
         $sql = self::$db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-        return $sql ? $sql[0] : false;
+        if (! $sql) return false;
+
+        $sql = $sql[0];
+        $i = strpos($sql['city'], ',');
+        if (false !== $i) $sql['city'] = substr($sql['city'], 0, $i);
+
+        return $sql;
     }
 }
