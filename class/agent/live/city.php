@@ -43,13 +43,13 @@ class agent_live_city extends agent
 
         $sql = "SELECT city_id, city FROM city WHERE {$sql} ORDER BY rowid";
 
-        $o->cities = new loop_city_($db, $sql, 15);
+        $o->cities = new loop_city($db, $sql, 15);
 
         return $o;
     }
 }
 
-class loop_city_ extends loop
+class loop_city extends loop
 {
     protected $db;
     protected $sql;
